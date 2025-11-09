@@ -6,7 +6,6 @@ class ApiConfig {
   static const String logout = '$baseUrl/api/logout';
   static const String profile = '$baseUrl/api/profile';
 
-  // Category endpoints
   static const String categories = '$baseUrl/api/categories';
 
   static const String transactions = '$baseUrl/api/transactions';

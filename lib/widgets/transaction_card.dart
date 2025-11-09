@@ -133,7 +133,6 @@ class TransactionCard extends StatelessWidget {
   }
 }
 
-// Compact version untuk list sederhana
 class TransactionCardCompact extends StatelessWidget {
   final Transaction transaction;
   final VoidCallback? onTap;
@@ -185,7 +184,6 @@ class TransactionCardCompact extends StatelessWidget {
   }
 }
 
-// Summary card untuk dashboard
 class TransactionSummaryCard extends StatelessWidget {
   final String title;
   final double amount;

@@ -74,7 +74,6 @@ class BudgetService {
     }
   }
 
-  // Method lama: untuk backward compatibility
   Future<List<Budget>> getBudgets({int? month, int? year}) async {
     final result = await getBudgetsWithIncome(month: month, year: year);
     return result['budgets'] as List<Budget>;

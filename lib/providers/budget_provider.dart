@@ -33,7 +33,7 @@ class BudgetProvider with ChangeNotifier {
     _error = null;
     notifyListeners();
 
-    print('🔄 Loading budgets - month: $month, year: $year');
+    print('Loading budgets - month: $month, year: $year');
 
     final result = await _budgetService.getBudgetsWithIncome(
       month: month,
@@ -43,7 +43,7 @@ class BudgetProvider with ChangeNotifier {
     final budgets = result['budgets'] as List<Budget>;
     final income = result['total_income'] as double;
 
-    print('📦 BudgetProvider loaded: ${budgets.length} budgets, Income: Rp ${income.toStringAsFixed(0)}');
+    print('BudgetProvider loaded: ${budgets.length} budgets, Income: Rp ${income.toStringAsFixed(0)}');
 
     _budgets = budgets;
     _totalIncome = income;
@@ -65,8 +65,8 @@ class BudgetProvider with ChangeNotifier {
     _error = null;
     notifyListeners();
 
-    print('🔵 BudgetProvider.createBudget called');
-    print('   categoryId: $categoryId, amount: $amount, month: $month, year: $year');
+    print('BudgetProvider.createBudget called');
+    print('categoryId: $categoryId, amount: $amount, month: $month, year: $year');
 
     final result = await _budgetService.createBudget(
       categoryId: categoryId,
@@ -75,7 +75,7 @@ class BudgetProvider with ChangeNotifier {
       year: year,
     );
 
-    print('🔵 BudgetService result: $result');
+    print('BudgetService result: $result');
 
     _isLoading = false;
 
@@ -84,7 +84,7 @@ class BudgetProvider with ChangeNotifier {
       return true;
     } else {
       _error = result['message'];
-      print('❌ Error from service: $_error');
+      print('Error from service: $_error');
       notifyListeners();
       return false;
     }

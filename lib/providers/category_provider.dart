@@ -110,7 +110,6 @@ class CategoryProvider with ChangeNotifier {
         if (index != -1) {
           _categories[index] = updated;
         }
-        // sinkronisasi income & expense list
         await loadCategories();
       }
       notifyListeners();

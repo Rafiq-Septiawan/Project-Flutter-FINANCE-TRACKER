@@ -96,7 +96,6 @@ class _SplashScreenState extends State<SplashScreen>
               ),
             ),
             
-            // Content
             FadeTransition(
               opacity: _fadeAnimation,
               child: ScaleTransition(
@@ -105,7 +104,6 @@ class _SplashScreenState extends State<SplashScreen>
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      // Logo dengan efek glow
                       Container(
                         padding: const EdgeInsets.all(32),
                         decoration: BoxDecoration(
@@ -127,7 +125,6 @@ class _SplashScreenState extends State<SplashScreen>
                       ),
                       const SizedBox(height: 32),
 
-                      // App Name
                       const Text(
                         'Finance Tracker',
                         style: TextStyle(
@@ -139,7 +136,6 @@ class _SplashScreenState extends State<SplashScreen>
                       ),
                       const SizedBox(height: 12),
 
-                      // Subtitle
                       const Text(
                         'Kelola Keuangan Anda dengan Mudah',
                         style: TextStyle(
@@ -160,7 +156,6 @@ class _SplashScreenState extends State<SplashScreen>
   }
 }
 
-// Custom Painter untuk background pattern
 class CirclePatternPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
@@ -168,7 +163,6 @@ class CirclePatternPainter extends CustomPainter {
       ..color = Colors.white.withOpacity(0.05)
       ..style = PaintingStyle.fill;
 
-    // Gambar beberapa lingkaran untuk pattern
     canvas.drawCircle(Offset(size.width * 0.2, size.height * 0.1), 100, paint);
     canvas.drawCircle(Offset(size.width * 0.8, size.height * 0.3), 150, paint);
     canvas.drawCircle(Offset(size.width * 0.1, size.height * 0.7), 80, paint);

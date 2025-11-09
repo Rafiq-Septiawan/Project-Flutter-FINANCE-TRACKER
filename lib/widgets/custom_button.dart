@@ -69,7 +69,6 @@ class CustomButton extends StatelessWidget {
   }
 }
 
-// Variant untuk outline button
 class CustomOutlineButton extends StatelessWidget {
   final String text;
   final VoidCallback? onPressed;

@@ -24,7 +24,6 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
     return Scaffold(
       body: Stack(
         children: [
-          // PageView untuk gambar background
           PageView(
             controller: _pageController,
             onPageChanged: (index) {
@@ -38,7 +37,6 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
             ],
           ),
 
-          // Skip button di atas
           SafeArea(
             child: Align(
               alignment: Alignment.topRight,
@@ -73,8 +71,6 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
               ),
             ),
           ),
-
-          // Bottom Navigation
           Positioned(
             bottom: 40,
             left: 0,
@@ -85,7 +81,6 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    // Pagination indicator bulat
                     SmoothPageIndicator(
                       controller: _pageController,
                       count: 2,
@@ -97,8 +92,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                         spacing: 8,
                       ),
                     ),
-                    
-                    // Button lebih kecil
+   
                     ElevatedButton(
                       onPressed: () {
                         if (_isLastPage) {

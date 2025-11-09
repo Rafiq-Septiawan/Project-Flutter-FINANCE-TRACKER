@@ -14,7 +14,6 @@ class DashboardProvider with ChangeNotifier {
   bool get isLoading => _isLoading;
   String? get error => _error;
 
-  // Summary data getters
   double get currentIncome =>
       _summary?['current_month']?['income']?.toDouble() ?? 0.0;
 

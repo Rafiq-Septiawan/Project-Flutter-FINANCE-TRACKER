@@ -145,12 +145,10 @@ class _TransactionListScreenState extends State<TransactionListScreen> {
               ),
               child: Stack(
                 children: [
-                  // Grid pattern dengan lines
                   CustomPaint(
                     size: const Size(double.infinity, 140),
                     painter: GridPatternPainter(),
                   ),
-                  // Content
                   Padding(
                     padding: const EdgeInsets.fromLTRB(20, 16, 20, 20),
                     child: Column(

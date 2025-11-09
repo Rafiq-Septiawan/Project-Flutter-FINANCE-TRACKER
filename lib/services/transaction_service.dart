@@ -105,7 +105,6 @@ class TransactionService {
       print('Status Code: ${response.statusCode}');
       print('Response Body: ${response.body}');
 
-      // Cek apakah response adalah JSON
       if (!response.body.startsWith('{') && !response.body.startsWith('[')) {
         return {
           'success': false,

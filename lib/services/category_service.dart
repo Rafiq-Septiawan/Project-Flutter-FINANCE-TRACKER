@@ -7,7 +7,6 @@ import 'auth_service.dart';
 class CategoryService {
   final AuthService _authService = AuthService();
 
-  // Ambil semua kategori
   Future<List<Category>> getCategories({String? type}) async {
     try {
       final token = await _authService.getToken();
@@ -62,7 +61,6 @@ class CategoryService {
     }
   }
 
-  // Tambah kategori baru
   Future<Map<String, dynamic>> createCategory({
     required String name,
     required String type,
@@ -104,7 +102,6 @@ class CategoryService {
     }
   }
 
-  // Update kategori
   Future<Map<String, dynamic>> updateCategory({
     required int id,
     String? name,
@@ -145,7 +142,6 @@ class CategoryService {
     }
   }
 
-  // Hapus kategori
   Future<bool> deleteCategory(int id) async {
     try {
       final token = await _authService.getToken();

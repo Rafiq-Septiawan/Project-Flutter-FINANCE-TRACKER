@@ -85,7 +85,6 @@ class CustomTextField extends StatelessWidget {
   }
 }
 
-// Custom TextField untuk Currency (Rupiah)
 class CurrencyTextField extends StatelessWidget {
   final TextEditingController? controller;
   final String? labelText;
@@ -129,7 +128,6 @@ class CurrencyTextField extends StatelessWidget {
   }
 }
 
-// Custom TextField untuk Password
 class PasswordTextField extends StatefulWidget {
   final TextEditingController? controller;
   final String? labelText;

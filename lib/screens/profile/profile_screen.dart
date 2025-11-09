@@ -281,7 +281,6 @@ class ProfileScreen extends StatelessWidget {
       builder: (context) => Dialog(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
         child: SingleChildScrollView(
-          // ⬅️ tambahin ini biar bisa discroll
           padding: const EdgeInsets.all(24),
           child: Column(
             mainAxisSize: MainAxisSize.min,
