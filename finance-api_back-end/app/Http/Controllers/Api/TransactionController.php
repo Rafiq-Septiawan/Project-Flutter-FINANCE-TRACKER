@@ -9,24 +9,20 @@ use Illuminate\Validation\ValidationException;
 
 class TransactionController extends Controller
 {
-    // Get all transactions
     public function index(Request $request)
     {
         try {
             $query = Transaction::with('category')
                 ->where('user_id', $request->user()->id);
 
-            // Filter by type
             if ($request->has('type')) {
                 $query->where('type', $request->type);
             }
 
-            // Filter by category
             if ($request->has('category_id')) {
                 $query->where('category_id', $request->category_id);
             }
 
-            // Filter by date range
             if ($request->has('start_date')) {
                 $query->whereDate('date', '>=', $request->start_date);
             }
@@ -34,7 +30,6 @@ class TransactionController extends Controller
                 $query->whereDate('date', '<=', $request->end_date);
             }
 
-            // Filter by month & year
             if ($request->has('month') && $request->has('year')) {
                 $query->whereMonth('date', $request->month)
                       ->whereYear('date', $request->year);
@@ -54,7 +49,6 @@ class TransactionController extends Controller
         }
     }
 
-    // Create transaction
     public function store(Request $request)
     {
         try {
@@ -66,7 +60,6 @@ class TransactionController extends Controller
                 'date' => 'required|date',
             ]);
 
-            // Cek apakah kategori milik user yang login
             $category = \App\Models\Category::where('id', $validated['category_id'])
                 ->where('user_id', $request->user()->id)
                 ->first();
@@ -87,19 +80,16 @@ class TransactionController extends Controller
                 'date' => $validated['date'],
             ]);
 
-            // ==== Tambahan logic update budget ====
             if ($validated['type'] === 'expense') {
                 $budget = \App\Models\Budget::where('category_id', $validated['category_id'])
                     ->where('user_id', $request->user()->id)
                     ->first();
 
                 if ($budget) {
-                    // Misal kolom di tabel budgets namanya 'used' buat nampung total pengeluaran
                     $budget->used = $budget->used + $validated['amount'];
                     $budget->save();
                 }
             }
-            // =======================================
 
             $transaction->load('category');
 
@@ -122,7 +112,6 @@ class TransactionController extends Controller
         }
     }
 
-    // Get single transaction
     public function show(Request $request, $id)
     {
         try {
@@ -142,7 +131,6 @@ class TransactionController extends Controller
         }
     }
 
-    // Update transaction
     public function update(Request $request, $id)
     {
         try {
@@ -179,7 +167,6 @@ class TransactionController extends Controller
         }
     }
 
-    // Delete transaction
     public function destroy(Request $request, $id)
     {
         try {

@@ -32,8 +32,7 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     super.initState();
     _loadData();
-     WidgetsBinding.instance.addPostFrameCallback((_) {
-    });
+    WidgetsBinding.instance.addPostFrameCallback((_) {});
   }
 
   @override
@@ -130,7 +129,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   void _onNavTapped(int index) {
     setState(() => _selectedIndex = index);
-  
+
     if (index == 2) {
       _loadData();
     }
@@ -152,9 +151,9 @@ class _HomeScreenState extends State<HomeScreen> {
                   MaterialPageRoute(builder: (_) => const AddTransactionScreen()),
                 );
                 if (result == true) {
-                  await _loadData(); 
+                  await _loadData();
                   _showSuccessPopup("Transaksi berhasil ditambahkan");
-                  
+
                   if (mounted) {
                     setState(() {});
                   }
@@ -189,59 +188,117 @@ class _HomeScreenState extends State<HomeScreen> {
                   slivers: [
                     SliverToBoxAdapter(
                       child: Container(
-                        decoration: const BoxDecoration(
+                        height: 200,
+                        decoration: BoxDecoration(
                           gradient: LinearGradient(
-                            colors: [Colors.blueAccent, Colors.lightBlue],
+                            colors: [Colors.blue.shade700, Colors.blue.shade500],
                             begin: Alignment.topLeft,
                             end: Alignment.bottomRight,
                           ),
-                          borderRadius: BorderRadius.only(
+                          borderRadius: const BorderRadius.only(
                             bottomLeft: Radius.circular(32),
                             bottomRight: Radius.circular(32),
                           ),
                         ),
-                        child: Padding(
-                          padding: const EdgeInsets.fromLTRB(20, 20, 20, 32),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        child: Stack(
+                          children: [
+                            // Diamond pattern
+                            Positioned(
+                              left: -30,
+                              top: 20,
+                              child: Transform.rotate(
+                                angle: 0.5,
+                                child: Container(
+                                  width: 80,
+                                  height: 80,
+                                  decoration: BoxDecoration(
+                                    color: Colors.white.withOpacity(0.1),
+                                    borderRadius: BorderRadius.circular(15),
+                                  ),
+                                ),
+                              ),
+                            ),
+                            Positioned(
+                              right: 20,
+                              top: -20,
+                              child: Transform.rotate(
+                                angle: 0.8,
+                                child: Container(
+                                  width: 100,
+                                  height: 100,
+                                  decoration: BoxDecoration(
+                                    color: Colors.white.withOpacity(0.08),
+                                    borderRadius: BorderRadius.circular(20),
+                                  ),
+                                ),
+                              ),
+                            ),
+                            Positioned(
+                              right: -20,
+                              bottom: 20,
+                              child: Transform.rotate(
+                                angle: -0.3,
+                                child: Container(
+                                  width: 70,
+                                  height: 70,
+                                  decoration: BoxDecoration(
+                                    color: Colors.white.withOpacity(0.1),
+                                    borderRadius: BorderRadius.circular(12),
+                                  ),
+                                ),
+                              ),
+                            ),
+                            // Content
+                            Padding(
+                              padding: const EdgeInsets.fromLTRB(20, 20, 20, 15),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  const Text(
-                                    'Finance Tracker',
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      const Row(
+                                        children: [
+                                          Icon(Icons.account_balance_wallet, color: Colors.white, size: 26),
+                                          SizedBox(width: 10),
+                                          Text(
+                                            'Finance Tracker',
+                                            style: TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 22,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      IconButton(
+                                        onPressed: _logout,
+                                        icon: const Icon(Icons.logout_rounded, color: Colors.white, size: 22),
+                                      ),
+                                    ],
+                                  ),
+                                  const Spacer(),
+                                  Text(
+                                    'Total Saldo',
                                     style: TextStyle(
+                                      color: Colors.white.withOpacity(0.9),
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 8),
+                                  Text(
+                                    currencyFormat.format(_balance),
+                                    style: const TextStyle(
                                       color: Colors.white,
-                                      fontSize: 26,
+                                      fontSize: 36,
                                       fontWeight: FontWeight.bold,
                                     ),
                                   ),
-                                  IconButton(
-                                    onPressed: _logout,
-                                    icon: const Icon(Icons.logout_rounded, color: Colors.white, size: 24),
-                                  ),
                                 ],
                               ),
-                              const SizedBox(height: 24),
-                              Text(
-                                'Total Saldo',
-                                style: TextStyle(
-                                  color: Colors.white.withOpacity(0.9),
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w500,
-                                ),
-                              ),
-                              const SizedBox(height: 8),
-                              Text(
-                                currencyFormat.format(_balance),
-                                style: const TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 36,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ],
-                          ),
+                            ),
+                          ],
                         ),
                       ),
                     ),
@@ -257,7 +314,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                   child: _buildSummaryCard(
                                     title: 'Pemasukan',
                                     amount: currencyFormat.format(_totalIncome),
-                                    icon: Icons.trending_down,
+                                    icon: Icons.trending_up,
                                     color: Colors.green,
                                   ),
                                 ),
@@ -266,7 +323,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                   child: _buildSummaryCard(
                                     title: 'Pengeluaran',
                                     amount: currencyFormat.format(_totalExpense),
-                                    icon: Icons.trending_up,
+                                    icon: Icons.trending_down,
                                     color: Colors.red,
                                   ),
                                 ),
@@ -364,73 +421,73 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget _buildTransactionCard(Transaction t, NumberFormat f) {
-  final isIncome = t.type == 'income';
-  final color = isIncome ? Colors.green : Colors.red;
-  final icon = isIncome ? Icons.trending_down : Icons.trending_up;
+    final isIncome = t.type == 'income';
+    final color = isIncome ? Colors.green : Colors.red;
+    final icon = isIncome ? Icons.trending_up : Icons.trending_down;
 
-  return Container(
-    margin: const EdgeInsets.only(bottom: 14),
-    decoration: BoxDecoration(
-      color: Colors.white,
-      borderRadius: BorderRadius.circular(16),
-      boxShadow: [
-        BoxShadow(
-          color: Colors.black.withOpacity(0.06),
-          blurRadius: 8,
-          offset: const Offset(0, 3),
-        ),
-      ],
-    ),
-    child: Padding(
-      padding: const EdgeInsets.all(16),
-      child: Row(
-        children: [
-          Container(
-            padding: const EdgeInsets.all(12),
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                colors: [color.withOpacity(0.2), color.withOpacity(0.1)],
-              ),
-              borderRadius: BorderRadius.circular(12),
-            ),
-            child: Icon(icon, color: color, size: 24),
-          ),
-          const SizedBox(width: 14),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  t.category?.name ?? 'Unknown',
-                  style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
-                ),
-                const SizedBox(height: 4),
-                Text(
-                  DateFormat('dd MMM yyyy').format(t.date),
-                  style: TextStyle(color: Colors.grey[600], fontSize: 13),
-                ),
-                if (t.description != null && t.description!.isNotEmpty) ...[
-                  const SizedBox(height: 2),
-                  Text(
-                    t.description!,
-                    style: TextStyle(color: Colors.grey[500], fontSize: 12, fontStyle: FontStyle.italic),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                ],
-              ],
-            ),
-          ),
-          const SizedBox(width: 12),
-          Text(
-            f.format(t.amount),
-            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color: color),
+    return Container(
+      margin: const EdgeInsets.only(bottom: 14),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.06),
+            blurRadius: 8,
+            offset: const Offset(0, 3),
           ),
         ],
       ),
-    ),
-  );
-}
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Row(
+          children: [
+            Container(
+              padding: const EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [color.withOpacity(0.2), color.withOpacity(0.1)],
+                ),
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Icon(icon, color: color, size: 24),
+            ),
+            const SizedBox(width: 14),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    t.category?.name ?? 'Unknown',
+                    style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    DateFormat('dd MMM yyyy').format(t.date),
+                    style: TextStyle(color: Colors.grey[600], fontSize: 13),
+                  ),
+                  if (t.description != null && t.description!.isNotEmpty) ...[
+                    const SizedBox(height: 2),
+                    Text(
+                      t.description!,
+                      style: TextStyle(color: Colors.grey[500], fontSize: 12, fontStyle: FontStyle.italic),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ],
+                ],
+              ),
+            ),
+            const SizedBox(width: 12),
+            Text(
+              f.format(t.amount),
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color: color),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
 
   Widget _buildEmptyState() {
     return Center(

@@ -11,7 +11,6 @@ use Illuminate\Validation\ValidationException;
 
 class AuthController extends Controller
 {
-    // Register
     public function register(Request $request)
     {
         try {
@@ -27,8 +26,7 @@ class AuthController extends Controller
                 'password' => Hash::make($request->password),
             ]);
 
-            // ✅ Auto create default categories untuk user baru
-            CategoryHelper::createDefaultCategories($user->id);
+            app(\App\Http\Controllers\Api\CategoryController::class)->createDefaultCategories($user->id);
 
             $token = $user->createToken('auth_token')->plainTextToken;
 
@@ -54,7 +52,6 @@ class AuthController extends Controller
         }
     }
 
-    // Login
     public function login(Request $request)
     {
         try {
@@ -68,7 +65,7 @@ class AuthController extends Controller
             if (!$user || !Hash::check($request->password, $user->password)) {
                 return response()->json([
                     'success' => false,
-                    'message' => 'The provided credentials are incorrect.'
+                    'message' => 'Email atau kata sandi tidak sesuai.'
                 ], 401);
             }
 
@@ -96,7 +93,6 @@ class AuthController extends Controller
         }
     }
 
-    // Logout
     public function logout(Request $request)
     {
         try {
@@ -114,7 +110,6 @@ class AuthController extends Controller
         }
     }
 
-    // Get User Profile
     public function profile(Request $request)
     {
         try {

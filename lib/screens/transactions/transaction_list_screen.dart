@@ -3,6 +3,7 @@ import 'package:intl/intl.dart';
 import '../../services/transaction_service.dart';
 import '../../models/transaction_model.dart';
 import 'add_transaction_screen.dart';
+import '../../helper/icon_helper.dart';
 
 class TransactionListScreen extends StatefulWidget {
   const TransactionListScreen({super.key});
@@ -128,117 +129,142 @@ class _TransactionListScreenState extends State<TransactionListScreen> {
       body: SafeArea(
         child: Column(
           children: [
+            // Header dengan grid pattern
             Container(
-              decoration: const BoxDecoration(
+              height: 140,
+              decoration: BoxDecoration(
                 gradient: LinearGradient(
-                  colors: [Colors.blueAccent, Colors.lightBlue],
+                  colors: [Colors.blue.shade700, Colors.blue.shade500],
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
                 ),
-                borderRadius: BorderRadius.only(
+                borderRadius: const BorderRadius.only(
                   bottomLeft: Radius.circular(24),
                   bottomRight: Radius.circular(24),
                 ),
               ),
-              child: Padding(
-                padding: const EdgeInsets.fromLTRB(20, 16, 20, 20),
-                child: Column(
-                  children: [
-                    Row(
+              child: Stack(
+                children: [
+                  // Grid pattern dengan lines
+                  CustomPaint(
+                    size: const Size(double.infinity, 140),
+                    painter: GridPatternPainter(),
+                  ),
+                  // Content
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(20, 16, 20, 20),
+                    child: Column(
                       children: [
-                        const Expanded(
-                          child: Text(
-                            'Transaksi',
-                            style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white, fontSize: 24),
-                          ),
+                        Row(
+                          children: [
+                            Container(
+                              padding: const EdgeInsets.all(10),
+                              decoration: BoxDecoration(
+                                color: Colors.white.withOpacity(0.2),
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              child: const Icon(Icons.receipt_long, color: Colors.white, size: 24),
+                            ),
+                            const SizedBox(width: 12),
+                            const Expanded(
+                              child: Text(
+                                'Transaksi',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.white,
+                                  fontSize: 24,
+                                ),
+                              ),
+                            ),
+                            Container(
+                              decoration: BoxDecoration(
+                                color: Colors.white.withOpacity(0.2),
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              child: PopupMenuButton<String>(
+                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                                onSelected: (value) {
+                                  setState(() {
+                                    _filterType = value == 'all' ? null : value;
+                                    _loadTransactions();
+                                  });
+                                },
+                                itemBuilder: (context) => [
+                                  const PopupMenuItem(
+                                    value: 'all',
+                                    child: Row(
+                                      children: [
+                                        Icon(Icons.all_inclusive, size: 20, color: Colors.blue),
+                                        SizedBox(width: 12),
+                                        Text('Semua'),
+                                      ],
+                                    ),
+                                  ),
+                                  const PopupMenuItem(
+                                    value: 'income',
+                                    child: Row(
+                                      children: [
+                                        Icon(Icons.trending_up, size: 20, color: Colors.green),
+                                        SizedBox(width: 12),
+                                        Text('Pemasukan'),
+                                      ],
+                                    ),
+                                  ),
+                                  const PopupMenuItem(
+                                    value: 'expense',
+                                    child: Row(
+                                      children: [
+                                        Icon(Icons.trending_down, size: 20, color: Colors.red),
+                                        SizedBox(width: 12),
+                                        Text('Pengeluaran'),
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                                icon: const Icon(Icons.filter_list_rounded, color: Colors.white, size: 24),
+                              ),
+                            ),
+                          ],
                         ),
+                        const Spacer(),
                         Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
                           decoration: BoxDecoration(
                             color: Colors.white.withOpacity(0.2),
                             borderRadius: BorderRadius.circular(12),
                           ),
-                          child: PopupMenuButton<String>(
-                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-                            onSelected: (value) {
-                              setState(() {
-                                _filterType = value == 'all' ? null : value;
-                                _loadTransactions();
-                              });
-                            },
-                            itemBuilder: (context) => [
-                              const PopupMenuItem(
-                                value: 'all',
-                                child: Row(
-                                  children: [
-                                    Icon(Icons.all_inclusive, size: 20, color: Colors.blue),
-                                    SizedBox(width: 12),
-                                    Text('Semua'),
-                                  ],
-                                ),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Icon(
+                                _filterType == null
+                                    ? Icons.list_rounded
+                                    : _filterType == 'income'
+                                        ? Icons.trending_up
+                                        : Icons.trending_down,
+                                color: Colors.white,
+                                size: 18,
                               ),
-                              const PopupMenuItem(
-                                value: 'income',
-                                child: Row(
-                                  children: [
-                                    Icon(Icons.trending_up, size: 20, color: Colors.green),
-                                    SizedBox(width: 12),
-                                    Text('Pemasukan'),
-                                  ],
-                                ),
-                              ),
-                              const PopupMenuItem(
-                                value: 'expense',
-                                child: Row(
-                                  children: [
-                                    Icon(Icons.trending_down, size: 20, color: Colors.red),
-                                    SizedBox(width: 12),
-                                    Text('Pengeluaran'),
-                                  ],
+                              const SizedBox(width: 8),
+                              Text(
+                                _filterType == null
+                                    ? 'Menampilkan Semua'
+                                    : _filterType == 'income'
+                                        ? 'Pemasukan'
+                                        : 'Pengeluaran',
+                                style: const TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.w600,
+                                  fontSize: 14,
                                 ),
                               ),
                             ],
-                            icon: const Icon(Icons.filter_list_rounded, color: Colors.white, size: 24),
                           ),
                         ),
                       ],
                     ),
-                    const SizedBox(height: 12),
-                    Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-                      decoration: BoxDecoration(
-                        color: Colors.white.withOpacity(0.2),
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Icon(
-                            _filterType == null
-                                ? Icons.list_rounded
-                                : _filterType == 'income'
-                                    ? Icons.arrow_downward_rounded
-                                    : Icons.arrow_upward_rounded,
-                            color: Colors.white,
-                            size: 18,
-                          ),
-                          const SizedBox(width: 8),
-                          Text(
-                            _filterType == null
-                                ? 'Menampilkan Semua'
-                                : _filterType == 'income'
-                                    ? 'Pemasukan'
-                                    : 'Pengeluaran',
-                            style: const TextStyle(
-                              color: Colors.white,
-                              fontWeight: FontWeight.w600,
-                              fontSize: 14,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
+                  ),
+                ],
               ),
             ),
             Expanded(
@@ -308,9 +334,10 @@ class _TransactionListScreenState extends State<TransactionListScreen> {
                                                 ),
                                                 borderRadius: BorderRadius.circular(14),
                                               ),
-                                              child: Text(
-                                                transaction.category?.icon ?? '💰',
-                                                style: const TextStyle(fontSize: 28),
+                                              child: Icon(
+                                                getMaterialIcon(transaction.category?.icon ?? ''),
+                                                color: transaction.type == 'income' ? Colors.green : Colors.red,
+                                                size: 28,
                                               ),
                                             ),
                                             const SizedBox(width: 14),
@@ -365,7 +392,7 @@ class _TransactionListScreenState extends State<TransactionListScreen> {
                                                     borderRadius: BorderRadius.circular(8),
                                                   ),
                                                   child: Text(
-                                                    transaction.type == 'income' ? 'Masuk' : 'Keluar',
+                                                    transaction.type == 'income' ? 'Pemasukan' : 'Pengeluaran',
                                                     style: TextStyle(
                                                       fontSize: 11,
                                                       fontWeight: FontWeight.w600,
@@ -482,4 +509,38 @@ class _TransactionListScreenState extends State<TransactionListScreen> {
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
     );
   }
+}
+
+// Custom painter untuk grid pattern
+class GridPatternPainter extends CustomPainter {
+  @override
+  void paint(Canvas canvas, Size size) {
+    final paint = Paint()
+      ..color = Colors.white.withOpacity(0.08)
+      ..strokeWidth = 1
+      ..style = PaintingStyle.stroke;
+
+    const spacing = 30.0;
+
+    // Vertical lines
+    for (double x = 0; x < size.width; x += spacing) {
+      canvas.drawLine(
+        Offset(x, 0),
+        Offset(x, size.height),
+        paint,
+      );
+    }
+
+    // Horizontal lines
+    for (double y = 0; y < size.height; y += spacing) {
+      canvas.drawLine(
+        Offset(0, y),
+        Offset(size.width, y),
+        paint,
+      );
+    }
+  }
+
+  @override
+  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
 }

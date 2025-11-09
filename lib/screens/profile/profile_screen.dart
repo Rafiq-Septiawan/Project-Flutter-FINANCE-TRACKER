@@ -20,78 +20,141 @@ class ProfileScreen extends StatelessWidget {
           child: Column(
             children: [
               Container(
-                decoration: const BoxDecoration(
+                height: 206,
+                decoration: BoxDecoration(
                   gradient: LinearGradient(
-                    colors: [Colors.blueAccent, Colors.lightBlue],
+                    colors: [Colors.blue.shade700, Colors.blue.shade500],
                     begin: Alignment.topLeft,
                     end: Alignment.bottomRight,
                   ),
-                  borderRadius: BorderRadius.only(
+                  borderRadius: const BorderRadius.only(
                     bottomLeft: Radius.circular(28),
                     bottomRight: Radius.circular(28),
                   ),
                 ),
-                child: Padding(
-                  padding: const EdgeInsets.fromLTRB(20, 16, 20, 24),
-                  child: Column(
-                    children: [
-                      const Align(
-                        alignment: Alignment.centerLeft,
-                        child: Text(
-                          'Profil',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 24,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ),
-                      const SizedBox(height: 20),
-                      Container(
-                        padding: const EdgeInsets.all(3),
+                child: Stack(
+                  children: [
+                    Positioned(
+                      left: -100,
+                      top: -50,
+                      child: Container(
+                        width: 250,
+                        height: 250,
                         decoration: BoxDecoration(
-                          color: Colors.white,
                           shape: BoxShape.circle,
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.black.withOpacity(0.12),
-                              blurRadius: 12,
-                              offset: const Offset(0, 4),
-                            ),
-                          ],
+                          color: Colors.white.withOpacity(0.08),
                         ),
-                        child: CircleAvatar(
-                          radius: 40,
-                          backgroundColor: Colors.blue.shade50,
-                          child: Text(
-                            name.isNotEmpty ? name[0].toUpperCase() : 'U',
-                            style: const TextStyle(
-                              fontSize: 34,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.blue,
-                            ),
+                      ),
+                    ),
+                    Positioned(
+                      right: -50,
+                      top: 50,
+                      child: Container(
+                        width: 180,
+                        height: 180,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: Colors.white.withOpacity(0.06),
+                        ),
+                      ),
+                    ),
+                    Positioned(
+                      left: 60,
+                      bottom: -30,
+                      child: Container(
+                        width: 150,
+                        height: 150,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: Colors.white.withOpacity(0.07),
+                        ),
+                      ),
+                    ),
+                    Positioned(
+                      right: -30,
+                      bottom: 30,
+                      child: Transform.rotate(
+                        angle: 0.5,
+                        child: Container(
+                          width: 120,
+                          height: 120,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(20),
+                            color: Colors.white.withOpacity(0.05),
                           ),
                         ),
                       ),
-                      const SizedBox(height: 14),
-                      Text(
-                        name,
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                        ),
+                    ),
+                    // Content
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(20, 20, 20, 20),
+                      child: Column(
+                        children: [
+                          Align(
+                            alignment: Alignment.centerLeft,
+                            child: Row(
+                              children: [
+                                Container(
+                                  padding: const EdgeInsets.all(10),
+                                  decoration: BoxDecoration(
+                                    color: Colors.white.withOpacity(0.2),
+                                    borderRadius: BorderRadius.circular(12),
+                                  ),
+                                  child: const Icon(Icons.person_rounded,
+                                      color: Colors.white, size: 24),
+                                ),
+                                const SizedBox(width: 12),
+                                const Text(
+                                  'Profil',
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 24,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          const SizedBox(height: 2),
+                          Container(
+                            padding: const EdgeInsets.all(3),
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              shape: BoxShape.circle,
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.black.withOpacity(0.12),
+                                  blurRadius: 12,
+                                  offset: const Offset(0, 4),
+                                ),
+                              ],
+                            ),
+                            child: CircleAvatar(
+                              radius: 35,
+                              backgroundColor: Colors.blue.shade50,
+                              child: Text(
+                                name.isNotEmpty ? name[0].toUpperCase() : 'U',
+                                style: const TextStyle(
+                                  fontSize: 30,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.blue,
+                                ),
+                              ),
+                            ),
+                          ),
+                          const SizedBox(height: 10),
+                          Text(
+                            name,
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 24,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ],
                       ),
-                      const SizedBox(height: 4),
-                      Text(
-                        email,
-                        style: TextStyle(
-                          color: Colors.white.withOpacity(0.9),
-                          fontSize: 13,
-                        ),
-                      ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
               ),
               Padding(
@@ -113,6 +176,7 @@ class ProfileScreen extends StatelessWidget {
                         ],
                       ),
                       child: Column(
+                        mainAxisSize: MainAxisSize.min,
                         children: [
                           _buildInfoRow(Icons.person_rounded, 'Nama', name),
                           const SizedBox(height: 16),
@@ -122,7 +186,7 @@ class ProfileScreen extends StatelessWidget {
                         ],
                       ),
                     ),
-                    const SizedBox(height: 24),
+                    const SizedBox(height: 20),
                     InkWell(
                       onTap: () => _showLogoutDialog(context),
                       borderRadius: BorderRadius.circular(14),
@@ -145,7 +209,8 @@ class ProfileScreen extends StatelessWidget {
                         child: const Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Icon(Icons.logout_rounded, color: Colors.white, size: 20),
+                            Icon(Icons.logout_rounded,
+                                color: Colors.white, size: 20),
                             SizedBox(width: 10),
                             Text(
                               'Logout',
@@ -215,7 +280,8 @@ class ProfileScreen extends StatelessWidget {
       context: context,
       builder: (context) => Dialog(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
-        child: Padding(
+        child: SingleChildScrollView(
+          // ⬅️ tambahin ini biar bisa discroll
           padding: const EdgeInsets.all(24),
           child: Column(
             mainAxisSize: MainAxisSize.min,
@@ -226,7 +292,8 @@ class ProfileScreen extends StatelessWidget {
                   color: Colors.red.withOpacity(0.1),
                   shape: BoxShape.circle,
                 ),
-                child: const Icon(Icons.logout_rounded, color: Colors.red, size: 40),
+                child: const Icon(Icons.logout_rounded,
+                    color: Colors.red, size: 40),
               ),
               const SizedBox(height: 20),
               const Text(
@@ -264,12 +331,14 @@ class ProfileScreen extends StatelessWidget {
                   Expanded(
                     child: ElevatedButton(
                       onPressed: () async {
-                        final authProvider = Provider.of<AuthProvider>(context, listen: false);
+                        final authProvider =
+                            Provider.of<AuthProvider>(context, listen: false);
                         await authProvider.logout();
                         if (!context.mounted) return;
                         Navigator.pushAndRemoveUntil(
                           context,
-                          MaterialPageRoute(builder: (_) => const LoginScreen()),
+                          MaterialPageRoute(
+                              builder: (_) => const LoginScreen()),
                           (route) => false,
                         );
                       },

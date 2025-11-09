@@ -22,17 +22,22 @@ class CategoryProvider with ChangeNotifier {
     _error = null;
     notifyListeners();
 
-    final categories = await _categoryService.getCategories(type: type);
+    try {
+      final categories = await _categoryService.getCategories(type: type);
 
-    if (type == null) {
-      _categories = categories;
-      _incomeCategories = categories.where((c) => c.type == 'income').toList();
-      _expenseCategories =
-          categories.where((c) => c.type == 'expense').toList();
-    } else if (type == 'income') {
-      _incomeCategories = categories;
-    } else if (type == 'expense') {
-      _expenseCategories = categories;
+      if (type == null) {
+        _categories = categories;
+        _incomeCategories =
+            categories.where((c) => c.type == 'income').toList();
+        _expenseCategories =
+            categories.where((c) => c.type == 'expense').toList();
+      } else if (type == 'income') {
+        _incomeCategories = categories;
+      } else if (type == 'expense') {
+        _expenseCategories = categories;
+      }
+    } catch (e) {
+      _error = e.toString();
     }
 
     _isLoading = false;
@@ -46,8 +51,6 @@ class CategoryProvider with ChangeNotifier {
   Future<bool> createCategory({
     required String name,
     required String type,
-    String? icon,
-    String? color,
   }) async {
     _isLoading = true;
     _error = null;
@@ -56,17 +59,24 @@ class CategoryProvider with ChangeNotifier {
     final result = await _categoryService.createCategory(
       name: name,
       type: type,
-      icon: icon,
-      color: color,
     );
 
     _isLoading = false;
 
-    if (result['success']) {
-      await loadCategories();
+    if (result['success'] == true) {
+      final newCategory = result['data'] as Category?;
+      if (newCategory != null) {
+        _categories.add(newCategory);
+        if (newCategory.type == 'income') {
+          _incomeCategories.add(newCategory);
+        } else if (newCategory.type == 'expense') {
+          _expenseCategories.add(newCategory);
+        }
+      }
+      notifyListeners();
       return true;
     } else {
-      _error = result['message'];
+      _error = result['message'] ?? 'Gagal menambah kategori';
       notifyListeners();
       return false;
     }
@@ -93,11 +103,20 @@ class CategoryProvider with ChangeNotifier {
 
     _isLoading = false;
 
-    if (result['success']) {
-      await loadCategories();
+    if (result['success'] == true) {
+      final updated = result['category'] as Category?;
+      if (updated != null) {
+        final index = _categories.indexWhere((c) => c.id == updated.id);
+        if (index != -1) {
+          _categories[index] = updated;
+        }
+        // sinkronisasi income & expense list
+        await loadCategories();
+      }
+      notifyListeners();
       return true;
     } else {
-      _error = result['message'];
+      _error = result['message'] ?? 'Gagal update kategori';
       notifyListeners();
       return false;
     }
@@ -113,10 +132,13 @@ class CategoryProvider with ChangeNotifier {
     _isLoading = false;
 
     if (success) {
-      await loadCategories();
+      _categories.removeWhere((c) => c.id == id);
+      _incomeCategories.removeWhere((c) => c.id == id);
+      _expenseCategories.removeWhere((c) => c.id == id);
+      notifyListeners();
       return true;
     } else {
-      _error = 'Failed to delete category';
+      _error = 'Gagal menghapus kategori';
       notifyListeners();
       return false;
     }

@@ -9,12 +9,10 @@ use Illuminate\Http\Request;
 
 class BudgetController extends Controller
 {
-    // Get all budgets + total income
     public function index(Request $request)
     {
         $userId = $request->user()->id;
 
-        // Hitung total pemasukan (income) bulan & tahun berjalan
         $totalIncome = Transaction::where('user_id', $userId)
             ->where('type', 'income')
             ->when($request->has('month') && $request->has('year'), function ($query) use ($request) {
@@ -26,11 +24,9 @@ class BudgetController extends Controller
             })
             ->sum('amount');
 
-        // Ambil semua budget milik user
         $query = Budget::with('category')
             ->where('user_id', $userId);
 
-        // Filter by month & year kalau dikirim dari frontend
         if ($request->has('month') && $request->has('year')) {
             $query->where('month', $request->month)
                   ->where('year', $request->year);
@@ -63,7 +59,6 @@ class BudgetController extends Controller
         ]);
     }
 
-    // Create new budget
     public function store(Request $request)
 {
     $request->validate([
@@ -75,7 +70,6 @@ class BudgetController extends Controller
 
     $userId = $request->user()->id;
 
-    // Cek apakah sudah ada budget dengan kategori, bulan, tahun yang sama
     $existing = Budget::where('user_id', $userId)
         ->where('category_id', $request->category_id)
         ->where('month', $request->month)
@@ -106,7 +100,6 @@ class BudgetController extends Controller
     ], 201);
 }
 
-    // Get single budget
     public function show(Request $request, $id)
     {
         $budget = Budget::with('category')
@@ -134,7 +127,6 @@ class BudgetController extends Controller
         ]);
     }
 
-    // Update budget
     public function update(Request $request, $id)
     {
         $budget = Budget::where('user_id', $request->user()->id)
@@ -157,7 +149,6 @@ class BudgetController extends Controller
         ]);
     }
 
-    // Delete budget
     public function destroy(Request $request, $id)
     {
         $budget = Budget::where('user_id', $request->user()->id)

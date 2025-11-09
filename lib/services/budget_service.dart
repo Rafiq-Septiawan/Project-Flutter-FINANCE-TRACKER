@@ -117,7 +117,7 @@ class BudgetService {
         return {'success': false, 'message': 'Not authenticated'};
       }
 
-      final url = ApiConfig.budgets;
+      const url = ApiConfig.budgets;
       final body = {
         'category_id': categoryId,
         'amount': amount,

@@ -7,6 +7,7 @@ import 'auth_service.dart';
 class CategoryService {
   final AuthService _authService = AuthService();
 
+  // Ambil semua kategori
   Future<List<Category>> getCategories({String? type}) async {
     try {
       final token = await _authService.getToken();
@@ -37,6 +38,7 @@ class CategoryService {
     }
   }
 
+  // Ambil kategori by ID
   Future<Category?> getCategory(int id) async {
     try {
       final token = await _authService.getToken();
@@ -60,6 +62,7 @@ class CategoryService {
     }
   }
 
+  // Tambah kategori baru
   Future<Map<String, dynamic>> createCategory({
     required String name,
     required String type,
@@ -72,32 +75,36 @@ class CategoryService {
         return {'success': false, 'message': 'Not authenticated'};
       }
 
+      final body = {
+        'name': name,
+        'type': type,
+      };
+
+      if (icon != null) body['icon'] = icon;
+      if (color != null) body['color'] = color;
+
       final response = await http.post(
         Uri.parse(ApiConfig.categories),
         headers: {
           'Content-Type': 'application/json',
           'Authorization': 'Bearer $token',
         },
-        body: jsonEncode({
-          'name': name,
-          'type': type,
-          'icon': icon,
-          'color': color,
-        }),
+        body: jsonEncode(body),
       );
 
       final data = jsonDecode(response.body);
 
-      if (response.statusCode == 201) {
+      if (response.statusCode == 201 && data['success'] == true) {
         return {'success': true, 'category': Category.fromJson(data['data'])};
       } else {
-        return {'success': false, 'message': data['message'] ?? 'Failed'};
+        return {'success': false, 'message': data['message'] ?? 'Gagal menambah kategori'};
       }
     } catch (e) {
       return {'success': false, 'message': 'Network error: $e'};
     }
   }
 
+  // Update kategori
   Future<Map<String, dynamic>> updateCategory({
     required int id,
     String? name,
@@ -111,7 +118,7 @@ class CategoryService {
         return {'success': false, 'message': 'Not authenticated'};
       }
 
-      Map<String, dynamic> body = {};
+      final body = <String, dynamic>{};
       if (name != null) body['name'] = name;
       if (type != null) body['type'] = type;
       if (icon != null) body['icon'] = icon;
@@ -128,16 +135,17 @@ class CategoryService {
 
       final data = jsonDecode(response.body);
 
-      if (response.statusCode == 200) {
+      if (response.statusCode == 200 && data['success'] == true) {
         return {'success': true, 'category': Category.fromJson(data['data'])};
       } else {
-        return {'success': false, 'message': data['message'] ?? 'Failed'};
+        return {'success': false, 'message': data['message'] ?? 'Gagal update kategori'};
       }
     } catch (e) {
       return {'success': false, 'message': 'Network error: $e'};
     }
   }
 
+  // Hapus kategori
   Future<bool> deleteCategory(int id) async {
     try {
       final token = await _authService.getToken();

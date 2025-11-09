@@ -16,24 +16,20 @@ class DashboardController extends Controller
         $month = $request->query('month', date('m'));
         $year = $request->query('year', date('Y'));
 
-        // Total Income
         $totalIncome = Transaction::where('user_id', $userId)
             ->where('type', 'income')
             ->whereMonth('date', $month)
             ->whereYear('date', $year)
             ->sum('amount');
 
-        // Total Expense
         $totalExpense = Transaction::where('user_id', $userId)
             ->where('type', 'expense')
             ->whereMonth('date', $month)
             ->whereYear('date', $year)
             ->sum('amount');
 
-        // Balance
         $balance = $totalIncome - $totalExpense;
 
-        // Total All Time
         $totalAllTimeIncome = Transaction::where('user_id', $userId)
             ->where('type', 'income')
             ->sum('amount');
@@ -42,7 +38,6 @@ class DashboardController extends Controller
             ->where('type', 'expense')
             ->sum('amount');
 
-        // Recent Transactions
         $recentTransactions = Transaction::with('category')
             ->where('user_id', $userId)
             ->orderBy('date', 'desc')
@@ -50,7 +45,6 @@ class DashboardController extends Controller
             ->limit(10)
             ->get();
 
-        // Expense by Category (for current month)
         $expenseByCategory = Transaction::select('category_id', DB::raw('SUM(amount) as total'))
             ->with('category')
             ->where('user_id', $userId)
@@ -61,7 +55,6 @@ class DashboardController extends Controller
             ->orderBy('total', 'desc')
             ->get();
 
-        // Income by Category (for current month)
         $incomeByCategory = Transaction::select('category_id', DB::raw('SUM(amount) as total'))
             ->with('category')
             ->where('user_id', $userId)
@@ -96,7 +89,6 @@ class DashboardController extends Controller
         ]);
     }
 
-    // Get monthly report for chart
     public function monthlyReport(Request $request)
     {
         $userId = $request->user()->id;
