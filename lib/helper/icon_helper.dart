@@ -13,6 +13,11 @@ IconData getMaterialIcon(String iconName) {
     'card_giftcard': Icons.card_giftcard,
     'show_chart': Icons.show_chart,
     'account_balance_wallet': Icons.account_balance_wallet,
+    'computer': Icons.computer,
+    'savings': Icons.account_balance_wallet,
+    'home': Icons.home,
+    'flight': Icons.flight,
+    'sports_soccer': Icons.sports_soccer,
   };
 
   return iconMap[iconName] ?? Icons.category;

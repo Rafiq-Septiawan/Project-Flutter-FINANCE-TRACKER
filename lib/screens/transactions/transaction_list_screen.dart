@@ -511,34 +511,42 @@ class _TransactionListScreenState extends State<TransactionListScreen> {
   }
 }
 
-// Custom painter untuk grid pattern
 class GridPatternPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     final paint = Paint()
+      ..color = Colors.white.withOpacity(0.1)
+      ..style = PaintingStyle.fill;
+
+    canvas.drawCircle(Offset(size.width * 0.15, size.height * 0.2), 60, paint);
+    canvas.drawCircle(Offset(size.width * 0.85, size.height * 0.6), 80, paint);
+    canvas.drawCircle(Offset(size.width * 0.5, size.height * 0.9), 50, paint);
+
+    final coinPaint = Paint()
       ..color = Colors.white.withOpacity(0.08)
-      ..strokeWidth = 1
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 2;
+
+    canvas.drawCircle(Offset(size.width * 0.3, size.height * 0.4), 15, coinPaint);
+    canvas.drawCircle(Offset(size.width * 0.7, size.height * 0.3), 20, coinPaint);
+    canvas.drawCircle(Offset(size.width * 0.2, size.height * 0.7), 12, coinPaint);
+    canvas.drawCircle(Offset(size.width * 0.8, size.height * 0.8), 18, coinPaint);
+
+    final linePaint = Paint()
+      ..color = Colors.white.withOpacity(0.05)
+      ..strokeWidth = 1.5
       ..style = PaintingStyle.stroke;
 
-    const spacing = 30.0;
-
-    // Vertical lines
-    for (double x = 0; x < size.width; x += spacing) {
-      canvas.drawLine(
-        Offset(x, 0),
-        Offset(x, size.height),
-        paint,
-      );
-    }
-
-    // Horizontal lines
-    for (double y = 0; y < size.height; y += spacing) {
-      canvas.drawLine(
-        Offset(0, y),
-        Offset(size.width, y),
-        paint,
-      );
-    }
+    canvas.drawLine(
+      Offset(size.width * 0.1, size.height * 0.3),
+      Offset(size.width * 0.4, size.height * 0.5),
+      linePaint,
+    );
+    canvas.drawLine(
+      Offset(size.width * 0.6, size.height * 0.2),
+      Offset(size.width * 0.9, size.height * 0.4),
+      linePaint,
+    );
   }
 
   @override

@@ -30,6 +30,7 @@ dependencies:
 
   # Charts
   fl_chart: ^0.65.0
+  smooth_page_indicator: ^1.2.1
 
 dev_dependencies:
   flutter_test:
@@ -39,3 +40,7 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
+  assets:
+    - assets/splash_bg.png
+    - assets/onboarding_1.png
+    - assets/onboarding_2.png

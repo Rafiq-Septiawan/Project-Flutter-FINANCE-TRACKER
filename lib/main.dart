@@ -9,14 +9,13 @@ import 'providers/category_provider.dart';
 import 'providers/transaction_provider.dart';
 import 'providers/budget_provider.dart';
 import 'providers/dashboard_provider.dart';
-import 'screens/auth/login_screen.dart';
-import 'screens/home/home_screen.dart';
+
+// Import splash screen dari file-nya
+import 'screens/splash/splash_screen.dart';
 
 void main() async {
-  // Pastikan Flutter binding sudah diinisialisasi
   WidgetsFlutterBinding.ensureInitialized();
 
-  // Inisialisasi locale (bahasa & format tanggal)
   await initializeDateFormatting('id_ID', null);
   Intl.defaultLocale = 'id_ID';
 
@@ -30,6 +29,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
+        // ... (Semua kode provider abang aman di sini) ...
         ChangeNotifierProvider(create: (_) => AuthProvider()),
         ChangeNotifierProvider(create: (_) => CategoryProvider()),
         ChangeNotifierProvider(create: (_) => TransactionProvider()),
@@ -43,8 +43,6 @@ class MyApp extends StatelessWidget {
           colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
           useMaterial3: true,
         ),
-
-        // 🔹 Tambahkan dukungan bahasa lokal
         locale: const Locale('id', 'ID'),
         supportedLocales: const [
           Locale('id', 'ID'),
@@ -56,48 +54,8 @@ class MyApp extends StatelessWidget {
           GlobalCupertinoLocalizations.delegate,
         ],
 
-        // 🔹 Halaman awal (SplashScreen)
+        // Langsung panggil SplashScreen yang sudah di-import
         home: const SplashScreen(),
-      ),
-    );
-  }
-}
-
-class SplashScreen extends StatefulWidget {
-  const SplashScreen({super.key});
-
-  @override
-  State<SplashScreen> createState() => _SplashScreenState();
-}
-
-class _SplashScreenState extends State<SplashScreen> {
-  @override
-  void initState() {
-    super.initState();
-    _checkLoginStatus();
-  }
-
-  Future<void> _checkLoginStatus() async {
-    final authProvider = Provider.of<AuthProvider>(context, listen: false);
-    await authProvider.checkLoginStatus();
-
-    if (!mounted) return;
-
-    Navigator.pushReplacement(
-      context,
-      MaterialPageRoute(
-        builder: (_) => authProvider.isLoggedIn
-            ? const HomeScreen()
-            : const LoginScreen(),
-      ),
-    );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return const Scaffold(
-      body: Center(
-        child: CircularProgressIndicator(),
       ),
     );
   }

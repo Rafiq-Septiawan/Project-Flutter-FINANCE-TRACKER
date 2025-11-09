@@ -23,184 +23,187 @@ class _CategoryScreenState extends State<CategoryScreen> {
   }
 
   void _showAddCategoryDialog({Category? category}) {
-  final isEdit = category != null;
-  final nameController = TextEditingController(text: category?.name);
-  String selectedType = category?.type ?? (isIncome ? 'income' : 'expense');
+    final isEdit = category != null;
+    final nameController = TextEditingController(text: category?.name);
+    String selectedType = category?.type ?? (isIncome ? 'income' : 'expense');
 
-  showDialog(
-    context: context,
-    builder: (context) => StatefulBuilder(
-      builder: (context, setState) => Dialog(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
-        child: Container(
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-              colors: [Colors.blue.shade50, Colors.white],
+    showDialog(
+      context: context,
+      builder: (context) => StatefulBuilder(
+        builder: (context, setState) => Dialog(
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
+          child: Container(
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                colors: [Colors.blue.shade50, Colors.white],
+              ),
+              borderRadius: BorderRadius.circular(24),
             ),
-            borderRadius: BorderRadius.circular(24),
-          ),
-          child: Padding(
-            padding: const EdgeInsets.all(24),
-            child: SingleChildScrollView(
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Row(
-                    children: [
-                      Container(
-                        padding: const EdgeInsets.all(12),
-                        decoration: BoxDecoration(
-                          gradient: const LinearGradient(
-                            colors: [Colors.blueAccent, Colors.lightBlue],
+            child: Padding(
+              padding: const EdgeInsets.all(24),
+              child: SingleChildScrollView(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Row(
+                      children: [
+                        Container(
+                          padding: const EdgeInsets.all(12),
+                          decoration: BoxDecoration(
+                            gradient: const LinearGradient(
+                              colors: [Colors.blueAccent, Colors.lightBlue],
+                            ),
+                            borderRadius: BorderRadius.circular(14),
                           ),
-                          borderRadius: BorderRadius.circular(14),
-                        ),
-                        child: Icon(
-                          isEdit ? Icons.edit_rounded : Icons.add_rounded,
-                          color: Colors.white,
-                          size: 24,
-                        ),
-                      ),
-                      const SizedBox(width: 14),
-                      Expanded(
-                        child: Text(
-                          isEdit ? 'Edit Kategori' : 'Tambah Kategori',
-                          style: const TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
+                          child: Icon(
+                            isEdit ? Icons.edit_rounded : Icons.add_rounded,
+                            color: Colors.white,
+                            size: 24,
                           ),
                         ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 24),
-                  TextField(
-                    controller: nameController,
-                    decoration: InputDecoration(
-                      labelText: 'Nama Kategori',
-                      prefixIcon:
-                          const Icon(Icons.label_rounded, color: Colors.blue),
-                      border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(16)),
-                      filled: true,
-                      fillColor: Colors.white,
+                        const SizedBox(width: 14),
+                        Expanded(
+                          child: Text(
+                            isEdit ? 'Edit Kategori' : 'Tambah Kategori',
+                            style: const TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
-                  ),
-                  const SizedBox(height: 16),
-                  DropdownButtonFormField<String>(
-                    value: selectedType,
-                    decoration: InputDecoration(
-                      labelText: 'Tipe',
-                      prefixIcon: const Icon(Icons.category_rounded,
-                          color: Colors.blue),
-                      border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(16)),
-                      filled: true,
-                      fillColor: Colors.white,
+                    const SizedBox(height: 24),
+                    TextField(
+                      controller: nameController,
+                      decoration: InputDecoration(
+                        labelText: 'Nama Kategori',
+                        prefixIcon:
+                            const Icon(Icons.label_rounded, color: Colors.blue),
+                        border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(16)),
+                        filled: true,
+                        fillColor: Colors.white,
+                      ),
                     ),
-                    items: const [
-                      DropdownMenuItem(
-                        value: 'income',
-                        child: Row(
-                          children: [
-                            Icon(Icons.trending_up,
-                                color: Colors.green, size: 20),
-                            SizedBox(width: 8),
-                            Text('Pemasukan'),
-                          ],
-                        ),
+                    const SizedBox(height: 16),
+                    DropdownButtonFormField<String>(
+                      value: selectedType,
+                      decoration: InputDecoration(
+                        labelText: 'Tipe',
+                        prefixIcon: const Icon(Icons.category_rounded,
+                            color: Colors.blue),
+                        border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(16)),
+                        filled: true,
+                        fillColor: Colors.white,
                       ),
-                      DropdownMenuItem(
-                        value: 'expense',
-                        child: Row(
-                          children: [
-                            Icon(Icons.trending_down,
-                                color: Colors.red, size: 20),
-                            SizedBox(width: 8),
-                            Text('Pengeluaran'),
-                          ],
+                      items: const [
+                        DropdownMenuItem(
+                          value: 'income',
+                          child: Row(
+                            children: [
+                              Icon(Icons.trending_up,
+                                  color: Colors.green, size: 20),
+                              SizedBox(width: 8),
+                              Text('Pemasukan'),
+                            ],
+                          ),
                         ),
-                      ),
-                    ],
-                    onChanged: (value) => setState(() => selectedType = value!),
-                  ),
-                  const SizedBox(height: 24),
-                  Row(
-                    children: [
-                      Expanded(
-                        child: TextButton(
-                          onPressed: () => Navigator.pop(context),
-                          child: const Text('Batal',
-                              style: TextStyle(fontWeight: FontWeight.bold)),
+                        DropdownMenuItem(
+                          value: 'expense',
+                          child: Row(
+                            children: [
+                              Icon(Icons.trending_down,
+                                  color: Colors.red, size: 20),
+                              SizedBox(width: 8),
+                              Text('Pengeluaran'),
+                            ],
+                          ),
                         ),
-                      ),
-                      const SizedBox(width: 10),
-                      Expanded(
-                        child: ElevatedButton(
-                          onPressed: () async {
-                            final provider = Provider.of<CategoryProvider>(
-                                context,
-                                listen: false);
-                            bool success = false;
+                      ],
+                      onChanged: (value) =>
+                          setState(() => selectedType = value!),
+                    ),
+                    const SizedBox(height: 24),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: TextButton(
+                            onPressed: () => Navigator.pop(context),
+                            child: const Text('Batal',
+                                style: TextStyle(fontWeight: FontWeight.bold)),
+                          ),
+                        ),
+                        const SizedBox(width: 10),
+                        Expanded(
+                          child: ElevatedButton(
+                            onPressed: () async {
+                              final provider = Provider.of<CategoryProvider>(
+                                  context,
+                                  listen: false);
+                              bool success = false;
 
-                            if (isEdit) {
-                              success = await provider.updateCategory(
-                                id: category.id,
-                                name: nameController.text,
-                                type: selectedType,
-                              );
-                            } else {
-                              success = await provider.createCategory(
-                                name: nameController.text,
-                                type: selectedType,
-                              );
-                            }
+                              if (isEdit) {
+                                success = await provider.updateCategory(
+                                  id: category.id,
+                                  name: nameController.text,
+                                  type: selectedType,
+                                );
+                              } else {
+                                success = await provider.createCategory(
+                                  name: nameController.text,
+                                  type: selectedType,
+                                );
+                              }
 
-                            if (!mounted) return;
-                            // ignore: use_build_context_synchronously
-                            Navigator.pop(context);
+                              if (!mounted) return;
+                              // ignore: use_build_context_synchronously
+                              Navigator.pop(context);
 
-                            if (success) {
-                              await provider.loadCategories();
-                            }
+                              if (success) {
+                                await provider.loadCategories();
+                              }
 
-                            if (!mounted) return;
-                            // ignore: use_build_context_synchronously
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                content: Text(
-                                  success
-                                      ? (isEdit
-                                          ? 'Kategori berhasil diupdate'
-                                          : 'Kategori berhasil ditambahkan')
-                                      : provider.error ?? 'Gagal menyimpan',
+                              if (!mounted) return;
+                              // ignore: use_build_context_synchronously
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text(
+                                    success
+                                        ? (isEdit
+                                            ? 'Kategori berhasil diupdate'
+                                            : 'Kategori berhasil ditambahkan')
+                                        : provider.error ?? 'Gagal menyimpan',
+                                  ),
+                                  backgroundColor:
+                                      success ? Colors.green : Colors.red,
                                 ),
-                                backgroundColor: success ? Colors.green : Colors.red,
-                              ),
-                            );
-                          },
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.blue,
-                            foregroundColor: Colors.white,
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(12)),
+                              );
+                            },
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.blue,
+                              foregroundColor: Colors.white,
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(12)),
+                            ),
+                            child: const Text('Simpan'),
                           ),
-                          child: const Text('Simpan'),
                         ),
-                      ),
-                    ],
-                  ),
-                ],
+                      ],
+                    ),
+                  ],
+                ),
               ),
             ),
           ),
         ),
       ),
-    ),
-  );
-}
+    );
+  }
 
   Color _parseColor(String? hexColor) {
     try {
@@ -328,8 +331,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
                       label: const Text('Pengeluaran'),
                       onPressed: () => setState(() => isIncome = false),
                       style: ElevatedButton.styleFrom(
-                        backgroundColor:
-                            !isIncome ? Colors.blue : Colors.white,
+                        backgroundColor: !isIncome ? Colors.blue : Colors.white,
                         foregroundColor:
                             !isIncome ? Colors.white : Colors.black87,
                         shape: RoundedRectangleBorder(
@@ -345,8 +347,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
                       label: const Text('Pemasukan'),
                       onPressed: () => setState(() => isIncome = true),
                       style: ElevatedButton.styleFrom(
-                        backgroundColor:
-                            isIncome ? Colors.blue : Colors.white,
+                        backgroundColor: isIncome ? Colors.blue : Colors.white,
                         foregroundColor:
                             isIncome ? Colors.white : Colors.black87,
                         shape: RoundedRectangleBorder(
@@ -386,7 +387,8 @@ class _CategoryScreenState extends State<CategoryScreen> {
     );
   }
 
-  Widget _buildCategoryList(List<Category> categories, CategoryProvider provider) {
+  Widget _buildCategoryList(
+      List<Category> categories, CategoryProvider provider) {
     if (categories.isEmpty) {
       return const Center(
         child: Text(
@@ -428,8 +430,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
             ),
             title: Text(
               category.name,
-              style:
-                  const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
             ),
             subtitle: Text(
               category.type == 'income' ? 'Pemasukan' : 'Pengeluaran',
@@ -461,7 +462,9 @@ class _CategoryScreenState extends State<CategoryScreen> {
         title: const Text('Hapus Kategori'),
         content: const Text('Yakin mau hapus kategori ini?'),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(context, false), child: const Text('Batal')),
+          TextButton(
+              onPressed: () => Navigator.pop(context, false),
+              child: const Text('Batal')),
           ElevatedButton(
             onPressed: () => Navigator.pop(context, true),
             style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
@@ -476,8 +479,9 @@ class _CategoryScreenState extends State<CategoryScreen> {
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content:
-              Text(success ? 'Kategori berhasil dihapus' : 'Gagal menghapus kategori'),
+          content: Text(success
+              ? 'Kategori berhasil dihapus'
+              : 'Gagal menghapus kategori'),
           backgroundColor: success ? Colors.green : Colors.red,
         ),
       );
