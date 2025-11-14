@@ -335,8 +335,19 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
                   keyboardType: TextInputType.number,
                   style: const TextStyle(fontSize: 16),
                   decoration: InputDecoration(
-                    prefixText: 'Rp ',
-                    prefixStyle: const TextStyle(fontSize: 16, color: Colors.black87),
+                    prefixIcon: const Padding(
+                      padding: EdgeInsets.only(left: 16, right: 8),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text(
+                            'Rp ',
+                            style: TextStyle(fontSize: 16, color: Colors.black87),
+                          ),
+                        ],
+                      ),
+                    ),
+                    prefixIconConstraints: const BoxConstraints(minWidth: 0, minHeight: 0),
                     hintText: '0',
                     filled: true,
                     fillColor: Colors.grey[50],
@@ -344,7 +355,7 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
                       borderRadius: BorderRadius.circular(12),
                       borderSide: BorderSide.none,
                     ),
-                    contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+                    contentPadding: const EdgeInsets.symmetric(horizontal: 0, vertical: 14),
                   ),
                   inputFormatters: [
                     FilteringTextInputFormatter.digitsOnly,

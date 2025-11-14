@@ -426,7 +426,6 @@ class _TransactionListScreenState extends State<TransactionListScreen> {
                                                       style: TextStyle(
                                                         fontSize: 13,
                                                         color: Colors.grey[700],
-                                                        fontStyle: FontStyle.italic,
                                                       ),
                                                       maxLines: 1,
                                                       overflow: TextOverflow.ellipsis,
@@ -436,7 +435,6 @@ class _TransactionListScreenState extends State<TransactionListScreen> {
                                                       style: TextStyle(
                                                         fontSize: 13,
                                                         color: Colors.grey[700],
-                                                        fontStyle: FontStyle.italic,
                                                       ),
                                                     ),
                                                   ),

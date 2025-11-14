@@ -58,232 +58,244 @@ class _BudgetScreenState extends State<BudgetScreen> {
     }
   }
 
-  void _showAddBudgetDialog({Budget? budget}) async {
-    final isEdit = budget != null;
-    final amountController = TextEditingController(
-      text: budget != null
-          ? NumberFormat.decimalPattern('id_ID').format(budget.amount)
-          : '',
-    );
+void _showAddBudgetDialog({Budget? budget}) async {
+  final isEdit = budget != null;
+  final amountController = TextEditingController(
+    text: budget != null
+        ? NumberFormat.decimalPattern('id_ID').format(budget.amount)
+        : '',
+  );
 
-    final categoryProvider = Provider.of<CategoryProvider>(context, listen: false);
+  final categoryProvider = Provider.of<CategoryProvider>(context, listen: false);
 
-    if (categoryProvider.expenseCategories.isEmpty) {
-      await categoryProvider.loadCategories(type: 'expense');
-      if (!mounted) return;
-    }
-
-    int? selectedCategoryId = budget?.category?.id;
-
+  if (categoryProvider.expenseCategories.isEmpty) {
+    await categoryProvider.loadCategories(type: 'expense');
     if (!mounted) return;
-    showDialog(
-      context: context,
-      builder: (context) => StatefulBuilder(
-        builder: (context, setState) => AlertDialog(
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
-          backgroundColor: Colors.white,
-          title: Row(
-            children: [
-              Container(
-                padding: const EdgeInsets.all(10),
-                decoration: BoxDecoration(
-                  gradient: const LinearGradient(
-                      colors: [Colors.blueAccent, Colors.lightBlue]),
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: Icon(isEdit ? Icons.edit : Icons.add,
-                    color: Colors.white, size: 20),
+  }
+
+  int? selectedCategoryId = budget?.category?.id;
+
+  if (!mounted) return;
+  showDialog(
+    context: context,
+    builder: (context) => StatefulBuilder(
+      builder: (context, setState) => AlertDialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
+        backgroundColor: Colors.white,
+        title: Row(
+          children: [
+            Container(
+              padding: const EdgeInsets.all(10),
+              decoration: BoxDecoration(
+                gradient: const LinearGradient(
+                    colors: [Colors.blueAccent, Colors.lightBlue]),
+                borderRadius: BorderRadius.circular(12),
               ),
-              const SizedBox(width: 12),
-              Text(isEdit ? 'Edit Budget' : 'Tambah Budget'),
+              child: Icon(isEdit ? Icons.edit : Icons.add,
+                  color: Colors.white, size: 20),
+            ),
+            const SizedBox(width: 12),
+            Text(isEdit ? 'Edit Budget' : 'Tambah Budget'),
+          ],
+        ),
+        content: SingleChildScrollView(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Consumer<CategoryProvider>(
+                builder: (context, provider, _) {
+                  if (provider.expenseCategories.isEmpty) {
+                    return const Center(child: CircularProgressIndicator());
+                  }
+
+                  selectedCategoryId ??= provider.expenseCategories.first.id;
+
+                  return DropdownButtonFormField<int>(
+                    value: selectedCategoryId,
+                    decoration: InputDecoration(
+                      labelText: 'Kategori',
+                      prefixIcon: const Icon(Icons.category, color: Colors.blue),
+                      border: OutlineInputBorder(borderRadius: BorderRadius.circular(16)),
+                      filled: true,
+                      fillColor: Colors.grey[50],
+                    ),
+                    items: provider.expenseCategories.map((category) {
+                      return DropdownMenuItem<int>(
+                        value: category.id,
+                        child: Row(
+                          children: [
+                            Icon(
+                              getMaterialIcon(category.icon ?? ''),
+                              size: 20,
+                              color: _parseColor(category.color),
+                            ),
+                            const SizedBox(width: 10),
+                            Text(category.name),
+                          ],
+                        ),
+                      );
+                    }).toList(),
+                    onChanged: (value) => setState(() => selectedCategoryId = value),
+                  );
+                },
+              ),
+              const SizedBox(height: 16),
+              TextField(
+                controller: amountController,
+                keyboardType: TextInputType.number,
+                inputFormatters: [
+                  FilteringTextInputFormatter.digitsOnly,
+                  TextInputFormatter.withFunction((oldValue, newValue) {
+                    final value = newValue.text.replaceAll(RegExp(r'[^0-9]'), '');
+                    if (value.isEmpty) return const TextEditingValue();
+                    final formatted = _rupiahFormatter.format(int.parse(value));
+                    return TextEditingValue(
+                      text: formatted,
+                      selection: TextSelection.collapsed(offset: formatted.length),
+                    );
+                  }),
+                ],
+                decoration: InputDecoration(
+                  labelText: 'Jumlah Budget',
+                  prefixIcon: const Icon(Icons.payments, color: Colors.blue),
+                  prefixText: 'Rp ',
+                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(16)),
+                  filled: true,
+                  fillColor: Colors.grey[50],
+                ),
+              ),
             ],
           ),
-          content: SingleChildScrollView(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
+        ),
+        actions: [
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+            child: Row(
               children: [
-                Consumer<CategoryProvider>(
-                  builder: (context, provider, _) {
-                    if (provider.expenseCategories.isEmpty) {
-                      return const Center(child: CircularProgressIndicator());
-                    }
-
-                    selectedCategoryId ??= provider.expenseCategories.first.id;
-
-                    return DropdownButtonFormField<int>(
-                      value: selectedCategoryId,
-                      decoration: InputDecoration(
-                        labelText: 'Kategori',
-                        prefixIcon: const Icon(Icons.category, color: Colors.blue),
-                        border: OutlineInputBorder(borderRadius: BorderRadius.circular(16)),
-                        filled: true,
-                        fillColor: Colors.grey[50],
-                      ),
-                      items: provider.expenseCategories.map((category) {
-                        return DropdownMenuItem<int>(
-                          value: category.id,
-                          child: Row(
-                            children: [
-                              Icon(
-                                getMaterialIcon(category.icon ?? ''),
-                                size: 20,
-                                color: _parseColor(category.color),
-                              ),
-                              const SizedBox(width: 10),
-                              Text(category.name),
-                            ],
+                Expanded(
+                  child: TextButton(
+                    onPressed: () => Navigator.pop(context),
+                    child: const Text('Batal', style: TextStyle(fontWeight: FontWeight.bold)),
+                  ),
+                ),
+                const SizedBox(width: 10),
+                Expanded(
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.blue,
+                      foregroundColor: Colors.white,
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                    ),
+                    onPressed: () async {
+                      if (selectedCategoryId == null) {
+                        if (!mounted) return;
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content: Text('Pilih kategori terlebih dahulu!'),
+                            backgroundColor: Colors.red,
                           ),
                         );
-                      }).toList(),
-                      onChanged: (value) => setState(() => selectedCategoryId = value),
-                    );
-                  },
-                ),
-                const SizedBox(height: 16),
-                TextField(
-                  controller: amountController,
-                  keyboardType: TextInputType.number,
-                  inputFormatters: [
-                    FilteringTextInputFormatter.digitsOnly,
-                    TextInputFormatter.withFunction((oldValue, newValue) {
-                      final value = newValue.text.replaceAll(RegExp(r'[^0-9]'), '');
-                      if (value.isEmpty) return const TextEditingValue();
-                      final formatted = _rupiahFormatter.format(int.parse(value));
-                      return TextEditingValue(
-                        text: formatted,
-                        selection: TextSelection.collapsed(offset: formatted.length),
+                        return;
+                      }
+
+                      if (amountController.text.isEmpty) {
+                        if (!mounted) return;
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content: Text('Masukkan jumlah budget!'),
+                            backgroundColor: Colors.red,
+                          ),
+                        );
+                        return;
+                      }
+
+                      final cleanAmount = amountController.text.replaceAll('.', '').replaceAll(',', '');
+                      final amount = double.tryParse(cleanAmount);
+
+                      if (amount == null || amount <= 0) {
+                        if (!mounted) return;
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content: Text('Jumlah harus lebih dari 0!'),
+                            backgroundColor: Colors.red,
+                          ),
+                        );
+                        return;
+                      }
+
+                      if (!mounted) return;
+                      showDialog(
+                        context: context,
+                        barrierDismissible: false,
+                        builder: (context) => const Center(child: CircularProgressIndicator()),
                       );
-                    }),
-                  ],
-                  decoration: InputDecoration(
-                    labelText: 'Jumlah Budget',
-                    prefixIcon: const Icon(Icons.payments, color: Colors.blue),
-                    prefixText: 'Rp ',
-                    border: OutlineInputBorder(borderRadius: BorderRadius.circular(16)),
-                    filled: true,
-                    fillColor: Colors.grey[50],
+
+                      try {
+                        final provider = Provider.of<BudgetProvider>(context, listen: false);
+                        bool success;
+
+                        if (isEdit) {
+                          success = await provider.updateBudget(
+                            id: budget!.id,
+                            categoryId: selectedCategoryId!,
+                            amount: amount,
+                            month: _selectedDate.month,
+                            year: _selectedDate.year,
+                          );
+                        } else {
+                          success = await provider.createBudget(
+                            categoryId: selectedCategoryId!,
+                            amount: amount,
+                            month: _selectedDate.month,
+                            year: _selectedDate.year,
+                          );
+                        }
+
+                        if (!mounted) return;
+                        // ignore: use_build_context_synchronously
+                        Navigator.pop(context);
+                        // ignore: use_build_context_synchronously
+                        Navigator.pop(context);
+                        if (success) {
+                          await _loadData();
+                          if (!mounted) return;
+                        }
+
+                        // ignore: use_build_context_synchronously
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text(success
+                                ? (isEdit ? 'Budget berhasil diupdate!' : 'Budget berhasil ditambahkan!')
+                                : 'Gagal menyimpan budget. Coba lagi.'),
+                            backgroundColor: success ? Colors.green : Colors.red,
+                          ),
+                        );
+                      } catch (e) {
+                        if (!mounted) return;
+                        // ignore: use_build_context_synchronously
+                        Navigator.pop(context);
+                        // ignore: use_build_context_synchronously
+                        Navigator.pop(context);
+                        // ignore: use_build_context_synchronously
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text('Error: $e'),
+                            backgroundColor: Colors.red,
+                          ),
+                        );
+                      }
+                    },
+                    child: const Text('Simpan'),
                   ),
                 ),
               ],
             ),
           ),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(context),
-              child: const Text('Batal'),
-            ),
-            ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.blue,
-                foregroundColor: Colors.white,
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-              ),
-              onPressed: () async {
-                if (selectedCategoryId == null) {
-                  if (!mounted) return;
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text('Pilih kategori terlebih dahulu!'),
-                      backgroundColor: Colors.red,
-                    ),
-                  );
-                  return;
-                }
-
-                if (amountController.text.isEmpty) {
-                  if (!mounted) return;
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text('Masukkan jumlah budget!'),
-                      backgroundColor: Colors.red,
-                    ),
-                  );
-                  return;
-                }
-
-                final cleanAmount = amountController.text.replaceAll('.', '').replaceAll(',', '');
-                final amount = double.tryParse(cleanAmount);
-
-                if (amount == null || amount <= 0) {
-                  if (!mounted) return;
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text('Jumlah harus lebih dari 0!'),
-                      backgroundColor: Colors.red,
-                    ),
-                  );
-                  return;
-                }
-
-                if (!mounted) return;
-                showDialog(
-                  context: context,
-                  barrierDismissible: false,
-                  builder: (context) => const Center(child: CircularProgressIndicator()),
-                );
-
-                try {
-                  final provider = Provider.of<BudgetProvider>(context, listen: false);
-                  bool success;
-
-                  if (isEdit) {
-                    success = await provider.updateBudget(
-                      id: budget!.id,
-                      categoryId: selectedCategoryId!,
-                      amount: amount,
-                      month: _selectedDate.month,
-                      year: _selectedDate.year,
-                    );
-                  } else {
-                    success = await provider.createBudget(
-                      categoryId: selectedCategoryId!,
-                      amount: amount,
-                      month: _selectedDate.month,
-                      year: _selectedDate.year,
-                    );
-                  }
-
-                  if (!mounted) return;
-                  // ignore: use_build_context_synchronously
-                  Navigator.pop(context);
-                  // ignore: use_build_context_synchronously
-                  Navigator.pop(context);
-                  if (success) {
-                    await _loadData();
-                    if (!mounted) return;
-                  }
-
-                  // ignore: use_build_context_synchronously
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text(success
-                          ? (isEdit ? 'Budget berhasil diupdate!' : 'Budget berhasil ditambahkan!')
-                          : 'Gagal menyimpan budget. Coba lagi.'),
-                      backgroundColor: success ? Colors.green : Colors.red,
-                    ),
-                  );
-                } catch (e) {
-                  if (!mounted) return;
-                  // ignore: use_build_context_synchronously
-                  Navigator.pop(context);
-                  // ignore: use_build_context_synchronously
-                  Navigator.pop(context);
-                  // ignore: use_build_context_synchronously
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text('Error: $e'),
-                      backgroundColor: Colors.red,
-                    ),
-                  );
-                }
-              },
-              child: const Text('Simpan'),
-            ),
-          ],
-        ),
+        ],
       ),
-    );
-  }
+    ),
+  );
+}
 
   @override
   Widget build(BuildContext context) {

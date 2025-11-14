@@ -254,9 +254,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                 );
                               },
                             ),
-
                             const SizedBox(height: 20),
-
                             Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
@@ -275,7 +273,9 @@ class _LoginScreenState extends State<LoginScreen> {
                                     );
                                   },
                                   style: TextButton.styleFrom(
-                                    padding: const EdgeInsets.symmetric(horizontal: 4),
+                                    padding: EdgeInsets.zero,
+                                    minimumSize: const Size(0, 0),
+                                    tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                                   ),
                                   child: Text(
                                     'Daftar',
